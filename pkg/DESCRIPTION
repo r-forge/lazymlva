@@ -1,0 +1,12 @@
+Package: LazyMLVA
+Type: Package
+Title: Automates MLVA type assingment
+Version: 0.0
+Date: 2010-01-12
+Author: Johannes Elias <jelias@hygiene.uni-wuerzburg.de>
+Maintainer: Johannes Elias <jelias@hygiene.uni-wuerzburg.de>
+Depends: R (>= 2.10.1), seqinr (>= 2.0-7)
+Description: The package computes sizes of PCR products from abif files and
+	converts them to repeat counts
+License: GPL
+LazyLoad: yes
