@@ -13,6 +13,9 @@ if (length(pks) < 3) stop("pks has to contain 3 peaks at least!")
 return(((pks-min(pks))/(max(pks)-min(pks)))[-c(1,length(pks))]) 
 }
 
+# Generate r_npk from r_abif (r_abif is loaded via sysdata.rda in source directory "R")
+# r_npk <- normPeaks(peakabif(r_abif,chanel=5,npeak=15,tmin=2.3,thres=0.5,fig=FALSE)$maxis)
+
 #
 # Function: samePeaks
 #
@@ -215,9 +218,30 @@ if (all(!is.na(sPks))) {
     }
   }
 }
+# generate variables holding faulty loci
+f.loxnx <- character()
+f.loxnx2 <- character()
+
+# issue results
 if (standardFound) {
+  # check if product sizes are available for all loci
+  if (any(is.na(result))) {
+    f.loxnx <- colnames(result)[is.na(result)]
+    if (length(f.loxnx) > 1) {
+      for (i in 1:length(f.loxnx)) f.loxnx2 <- paste(f.loxnx2,f.loxnx[i],sep=", ")
+      f.loxnx2 <- substr(f.loxnx2,3,nchar(f.loxnx2))
+      message(paste("Product sizes pertaining to loci ",f.loxnx2,", in file ",strain.name," could not be determined.",sep=""))
+    } else {
+      message(paste("Product size pertaining to locus ",f.loxnx," in file ",strain.name," could not be determined.",sep=""))
+    }
+  }
   return(result)
 } else {
+  # format a pretty diagnostic message
+  for (i in 1:length(locus.names)) f.loxnx <- paste(f.loxnx,locus.names[i],sep=", ")
+  f.loxnx <- substr(f.loxnx,3,nchar(f.loxnx))
+  message(paste("Standard peaks of file ",strain.name,", containing loci ",f.loxnx,", could not be retrieved.",sep=""))
+  # return result
   return(noPks)
 }
 }
@@ -226,18 +250,19 @@ if (standardFound) {
 # Function: vntrLoci
 #
 # This function calls sizeCaller for all found files of a series and converts product sizes to repeat numbers according to
-# a lazy map.
+# a lazy map. data.frame lazy.map is loaded via sysdata.rda in source directory "R".
 #
 # function parameters:
+# p                   path to directory containing abif files to be analyzed
 # lz.map              a lazy map containing locus names, channel numbers, lengths of possible products
 #                     see lazy.map
 # file.ending         default is ".fsa"
 # size.only           defaults to FALSE; if TRUE, only product sizes in basepairs are given
 # filename.sep        defaults to "_". The character string in the filename before this separator is assumed to be the strain name
-# ...                 parameters passed on to dir() like path="." etc.
+# wide.table          logical variable stating whether conversion of results to a wide table should be attempted
 #
 
-vntrLoci <- function(lz.map=lazy.map,file.ending=".fsa",size.only=FALSE,filename.sep="_",export.path,...) {
+vntrLoci <- function(p,lz.map=lazy.map,file.ending=".fsa",size.only=FALSE,filename.sep="_",wide.table=TRUE) {
 # parameter lz.map is validated
 #cat(paste("\nValidating lz.map '",lz.map,"'...\n",sep=""))
 if (class(lz.map) != "data.frame") stop("lz.map needs to be a data.frame!")
@@ -262,7 +287,7 @@ for (s in series) {
   # retrieve the filenames of the series in question
   # it is assumed that filenames are of the form "XXX_S1.fsa", where XXX represents a strain specific string,
   # "_" is filename.separator, "S1" is the string representation of a series (e.g. series 1), and ".fsa" is the file ending.
-  seriesFiles <- dir(...,pattern=paste(s, file.ending, sep=""))
+  seriesFiles <- dir(path=p,pattern=paste(s, file.ending, sep=""),full.names=TRUE)
   # create a data.frame that holds the results of this series
   seriesResults <- data.frame()
   # generate a numeric variable that holds required channel numbers (these are to be fed to seqinr::peakabif)
@@ -344,26 +369,43 @@ if (!size.only) {
       temp.df <- subset(lz.map,lz.map$locus==n)
       # iterate through rows of a series table
       for (r in 1:nrow(result[[i]])) {
+        # detect whether a conversion from basepairs to repeat number was successful
+        conversion.found <- FALSE
         # look up the number of repeats in temp.df
         for (j in 1:nrow(temp.df)) {
-          if ((result[[i]][r,n] >= temp.df[j,"from"]) && (result[[i]][r,n] <= temp.df[j,"to"])) {
-            result[[i]][r,n] <- temp.df[j,"repeats"]
+          if (!is.na(result[[i]][r,n])) {
+            if ((result[[i]][r,n] >= temp.df[j,"from"]) && (result[[i]][r,n] <= temp.df[j,"to"])) {
+              conversion.found <- TRUE
+              result[[i]][r,n] <- temp.df[j,"repeats"]
+            }
           }
+        }
+        # issue a message if conversion was not successful
+        if (!conversion.found && !is.na(result[[i]][r,n])) {
+          message(paste("The lazy.map provided did not allow conversion to repeat number in file ",rownames(result[[i]])[r],", locus ",n,". Only rounded product size in basepairs is given.",sep=""))
         }
       }
     }
+    # round 
+    result[[i]] <- round(result[[i]])
   }
 }
-#export results if export.path was specified
-if (!missing(export.path)) {
-  #cat("Exporting result into files...\n")
-  if (!file.info(export.path)[["isdir"]]) {
-    warning(paste("Results could not be exported, since export.path",export.path,"does not point to a directory!"))
-  } else {
-    # iterate through series and write one csv file per series
-    for (i in 1:length(result)) {
-      write.csv2(result[[i]],file=paste(export.path,"/",names(result)[i],".csv",sep=""))
+
+# convert result (which is a list at this point) to a nice table with strain numbers as rows and loci as columns
+# this only works if the same strains have been analyzed in each of the series
+if (wide.table) {
+  # check whether conversion is possible
+  # iterate through tables in result
+  same <- TRUE
+  result.w <- result[[1]]
+  for (i in 1:length(result)) if (!identical(rownames(result[[1]]),rownames(result[[i]]))) same <- FALSE
+  if (same && (length(result) > 1)) {
+    for (i in 2:length(result)) {
+      result.w <- cbind(result.w,result[[i]])  
     }
+    result <- result.w
+  } else {
+    message("Conversion to wide table was not possible since files of different strains were analyzed in the series. Sorry.")
   }
 }
 return(result)

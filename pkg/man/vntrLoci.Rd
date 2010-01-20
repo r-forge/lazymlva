@@ -8,10 +8,13 @@ vntrLoci
 This function automates the analysis of ABIF files within a directory according to specifications in a 'lazy map'.
 }
 \usage{
-vntrLoci(lz.map = lazy.map, file.ending = ".fsa", size.only = FALSE, filename.sep = "_", export.path, ...)
+vntrLoci(p, lz.map = lazy.map, file.ending = ".fsa", size.only = FALSE, filename.sep = "_", wide.table = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
+  \item{p}{
+path to directory containing abif files to be analyzed
+}
   \item{lz.map}{
 a 'lazy map' is a table listing all loci that are looked for, their basepair ranges, corresponding repeat numbers, etc.
 }
@@ -24,11 +27,8 @@ if TRUE, only sizes in basepairs are given
   \item{filename.sep}{
 ABIF filenames are assumed to be of the form NAME + filename.sep + SERIES + file.ending; e.g. 1087_S1.fsa specifies series 'S1' of strain '1087'
 }
-  \item{export.path}{
-if given, result is additionally written to csv files in this directory
-}
-  \item{\dots}{
-arguments passed on to \code{dir(...)} like \code{path="."}
+  \item{wide.table}{
+logical variable stating whether conversion to a nice wide table should be attempted (this only works if the same strains have been specified in each series)
 }
 }
 \details{
@@ -54,8 +54,8 @@ Johannes Elias
 }
 \examples{
 # process ABIF files in directory 'abif'
-vntrLoci(path=system.file("abif",package="LazyMLVA"),full.names=TRUE)
+vntrLoci(system.file("abif",package="LazyMLVA"))
 
 # show sizes only
-vntrLoci(path=system.file("abif",package="LazyMLVA"),size.only=TRUE)
+vntrLoci(system.file("abif",package="LazyMLVA"),size.only=TRUE)
 }
