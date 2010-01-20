@@ -4,7 +4,8 @@
 normPeaks
 }
 \description{
-The function normalizes a peak vector containing the locations of peaks to make it comparable to other peak vectors.
+The function normalizes a peak vector containing the locations of peaks to make it 
+comparable to other peak vectors.
 }
 \usage{
 normPeaks(pks)

@@ -5,7 +5,8 @@
 samePeaks
 }
 \description{
-The function determines whether peaks in two electropherogram files (ABIF files) represent the same size standard or not. ABIF files have to be imported using the function \code{seqinr::read.abif}.
+The function determines whether peaks in two electropherogram files (ABIF files) represent the same size standard or not. 
+ABIF files have to be imported using the function \code{seqinr::read.abif}.
 }
 \usage{
 samePeaks(e1, e2, ch = 5, npks = 15, e1_tmin = 2.3, e1_thres = 0.5, e2_tmin = e1_tmin, e2_thres = e1_thres, dist_thres = 0.01, s_warn = -1)

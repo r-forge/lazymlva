@@ -5,7 +5,8 @@
 searchStandardPeaks
 }
 \description{
-The function looks for the standard size ladder in an electropherogram (ABIF) file. ABIF files have to be imported using \code{seqinr::read.abif()}. If successful, the function returns the peak positions the size standard.
+The function looks for the standard size ladder in an electropherogram (ABIF) file. ABIF files have to be imported using \code{seqinr::read.abif()}. 
+If successful, the function returns the peak positions the size standard.
 }
 \usage{
 searchStandardPeaks(x_abifile, refchannel = 5, reference = r_npk, npks = 15, x_tmin = 2, x_tmax = 3, x_thres = 0.5, x_step = 0.1, dist_thres = 0.01)
