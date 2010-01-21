@@ -132,8 +132,9 @@ tryCatch({
     # furthermore, tmin is increased sequentially by x_step (see seqinr::peakabif) until x_tmax is reached
     for (i in seq(x_tmin,x_tmax,x_step)) {
       if (result_found) break
+      xPks <- numeric()
       tryCatch({xPks <- peakabif(x_abifile,chanel=refchannel,npeak=npks,tmin=i,thres=j,fig=FALSE)$maxis},
-                error=function(ex){xPks <- numeric()},warning=function(ex){xPks <- numeric()})
+                error=function(ex){},warning=function(ex){})
       # successful retrieval requires same number of peaks as specified in npks ...
       if ((length(xPks)==npks) && (all(!is.na(xPks)))) {
         # ... and sufficient similarity of peaks with reference
