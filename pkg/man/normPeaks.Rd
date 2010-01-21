@@ -29,18 +29,12 @@ package \code{seqinr} by Charif, D. and Lobry, J.R. (2007)
 Johannes Elias
 }
 \note{
-%%  ~~further notes~~
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
-seqinr::peakabif
+\code{seqinr::peakabif}, \code{extractNormPeaks}
 }
 \examples{
 # "normalize" any vector
 normPeaks(c(3,5,6,9,10))
-
-# show normalized standard peaks of r_abif
-normPeaks(peakabif(r_abif,chanel=5,npeak=15,tmin=2.3,thres=0.5,fig=FALSE)$maxis)
 }

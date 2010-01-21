@@ -8,7 +8,7 @@ sizeCaller
 The function extracts positions of standard peaks from an ABIF file and calculates the sizes of products in specified channels.
 }
 \usage{
-sizeCaller(x_abifile, rsizes = c(50, 75, 100, 139, 150, 160, 200, NA, 300, NA, 350, 400, 450, 490, 500), 
+sizeCaller(x_abifile, rsizes = r_sizes, 
 ranges = matrix(rep(c(2.3, 8), sum(npeaks.per.channel)), nrow = sum(npeaks.per.channel), byrow = TRUE), 
 ranges.bp, thres_start = 2, channels = 1:4, npeaks.per.channel = rep(1, length(channels)), 
 locus.names = paste(rep("V", length(channels)), 1:sum(npeaks.per.channel), sep = ""), 
@@ -66,7 +66,7 @@ Johannes Elias
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{searchStandardPeaks}, \code{r_sizes}
 }
 \examples{
 # returns the sizes of peaks in the standard ABIF file

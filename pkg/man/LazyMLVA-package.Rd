@@ -11,16 +11,18 @@ It extracts the size standard from ABIF electropherogram files and automatically
 Further to estimating the sizes of found products, it converts the sizes to repeat lengths according to data specified in a 'lazy map'. 
 The package depends on seqinr.
 
-Function \code{sizeCaller} extracts the size ladder from the electropherogram and handles conversion of time to basepairs (see \code{?sizeCaller} for details).
+Function \code{sizeCaller} extracts the size ladder from the electropherogram and handles conversion of time to basepairs 
+(see \code{?sizeCaller} for details).
 
-Function \code{vntrLoci} analyzes files within a specified directory according to details given in a 'lazy map' (see \code{?vntrLoci} and \code{?lazy.map} for details regarding the function and the 'lazy map', respectively). 
+Function \code{vntrLoci} analyzes files within a specified directory according to details given in a 'lazy map' 
+(see \code{?vntrLoci} and \code{?lazy.map} for details regarding the function and the 'lazy map', respectively). 
 }
 \details{
 \tabular{ll}{
 Package: \tab LazyMLVA\cr
 Type: \tab Package\cr
-Version: \tab 0.0-3\cr
-Date: \tab 2010-01-20\cr
+Version: \tab 0.0-4\cr
+Date: \tab 2010-01-21\cr
 License: \tab GPL\cr
 LazyLoad: \tab yes\cr
 }
@@ -40,4 +42,15 @@ Applied Biosystems. (2009) Applied Biosystems Genetic Analysis Data File Format 
 \code{seqinr::peakabif}, \code{seqinr::read.abif} 
 }
 \examples{
+# show a nice plot of the time->bp conversion function
+searchStandardPeaks(r_abif,plotit=TRUE)
+
+# plot channels of reference abif file r_abif
+plotabif2(r_abif)
+
+# returns the sizes of peaks in the standard ABIF file
+sizeCaller(r_abif)
+
+# process all ABIF files in directory 'abif'
+vntrLoci(system.file("abif",package="LazyMLVA"))
 }

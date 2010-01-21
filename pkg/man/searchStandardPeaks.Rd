@@ -1,15 +1,17 @@
 \name{searchStandardPeaks}
 \alias{searchStandardPeaks}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 searchStandardPeaks
 }
 \description{
-The function looks for the standard size ladder in an electropherogram (ABIF) file. ABIF files have to be imported using \code{seqinr::read.abif()}. 
+The function looks for the standard size ladder in an electropherogram (ABIF) file. 
+ABIF files have to be imported using \code{seqinr::read.abif()}. 
 If successful, the function returns the peak positions the size standard.
 }
 \usage{
-searchStandardPeaks(x_abifile, refchannel = 5, reference = r_npk, npks = 15, x_tmin = 2, x_tmax = 3, x_thres = 0.5, x_step = 0.1, dist_thres = 0.01)
+searchStandardPeaks(x_abifile, refchannel = 5, reference = r_npk, npks = 15, 
+                    rsizes = r_sizes, x_tmin = 2, x_tmax = 3, x_thres = 0.5, 
+                    x_step = 0.1, dist_thres = 0.01, plotit = FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -25,6 +27,9 @@ contains normalized peak positions. Peak positions can be extracted from an ABIF
   \item{npks}{
 number of expected peaks
 }
+  \item{rsizes}{
+sizes of reference peaks in basepairs; peaks not to be counted are given as NA.
+}
   \item{x_tmin}{
 starting time for the time axis for x_abifile (see function \code{seqinr::peakabif})
 }
@@ -39,6 +44,12 @@ step, by which x_thres is decreased and x_tmin increased until standard peaks ar
 }
   \item{dist_thres}{
 euclidian distance of peak vectors, below which identity of references in x_abifile and reference is assumed
+}
+  \item{plotit}{
+logical value stating whether a time->bp plot should be shown
+}
+  \item{\dots}{
+arguments passed to \code{plot}
 }
 }
 \details{
@@ -65,4 +76,7 @@ sizeCaller
 \examples{
 # returns positions of reference peaks in reference file
 searchStandardPeaks(r_abif)
+
+# show a nice plot of the time->bp conversion function
+searchStandardPeaks(r_abif,plotit=TRUE)
 }
