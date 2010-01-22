@@ -21,8 +21,8 @@ Function \code{vntrLoci} analyzes files within a specified directory according t
 \tabular{ll}{
 Package: \tab LazyMLVA\cr
 Type: \tab Package\cr
-Version: \tab 0.0-4\cr
-Date: \tab 2010-01-21\cr
+Version: \tab 0.0-5\cr
+Date: \tab 2010-01-22\cr
 License: \tab GPL\cr
 LazyLoad: \tab yes\cr
 }

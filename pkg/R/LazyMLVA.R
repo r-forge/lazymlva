@@ -133,6 +133,7 @@ tryCatch({
     for (i in seq(x_tmin,x_tmax,x_step)) {
       if (result_found) break
       xPks <- numeric()
+#      try({xPks <- peakabif(x_abifile,chanel=refchannel,npeak=npks,tmin=i,thres=j,fig=FALSE)$maxis}, TRUE) # try only suppresses error messages, not warnings
       tryCatch({xPks <- peakabif(x_abifile,chanel=refchannel,npeak=npks,tmin=i,thres=j,fig=FALSE)$maxis},
                 error=function(ex){},warning=function(ex){})
       # successful retrieval requires same number of peaks as specified in npks ...
@@ -158,6 +159,7 @@ if (result_found) {
   }
   return(xPks)
 } else {
+  warning(paste("standard peaks for ",deparse(substitute(x_abifile))," could not be retrieved."))
   return(xPks_error)
 }
 }
@@ -203,7 +205,7 @@ if (missing(ranges.bp)) {
   # if ranges.bp is present
   # validate ranges.bp
   if (!all(dim(ranges.bp)==c(sum(npeaks.per.channel),2))) {
-    warning("\n  ranges.bp could not be used, since ranges were not specified for each locus!")
+    warning("ranges.bp could not be used, since ranges were not specified for each locus!")
     ranges.x <- ranges
   } else {
     bp <- TRUE
@@ -216,7 +218,9 @@ standardFound <- FALSE
 noPks <- matrix(rep(NA,sum(npeaks.per.channel)),nrow=1,dimnames=list(strain.name,locus.names))
 result <- noPks
 # standard peaks in x_abifile are located; see function searchStandardPeaks
-sPks <- searchStandardPeaks(x_abifile,...)
+# catch warning
+sPks <- NA
+tryCatch({sPks <- searchStandardPeaks(x_abifile,rsizes=rsizes,...)},warning=function(ex){})
 pk <- numeric()
 # if all standard peaks have been located the script proceeds
 if (all(!is.na(sPks))) {
@@ -236,11 +240,11 @@ if (all(!is.na(sPks))) {
     # threshold is sequentially reduced if no peak is found
     for (j in seq(thres_start,0.1,-0.1)) {
       # an error or warning causes pk to be NULL
+      pk <- NULL # accept no warnings or errors
       tryCatch({ pk <- peakabif(x_abifile,chanel=channels[i],npeak=npeaks.per.channel[i],tmin=min(ranges.x[i,]),tmax=max(ranges.x[i,]),thres=j,fig=FALSE)$maxis },
-                error=function(ex){pk<-NULL}, warning=function(ex){pk<-NULL})
-
+                error=function(ex){}, warning=function(ex){})
       # if correct number of peaks is found ...
-      # (NULL has length 0)
+      # (btw NULL has length 0)
       if (length(pk)==npeaks.per.channel[i]) {
         # ... time is converted to basepairs using previously created conversion function
         if (i==1) { r.start <- 1 } else { r.start <- sum(npeaks.per.channel[1:i-1])+1 }
@@ -255,27 +259,21 @@ if (all(!is.na(sPks))) {
 }
 # generate variables holding faulty loci
 f.loxnx <- character()
-f.loxnx2 <- character()
-
 # issue results
 if (standardFound) {
   # check if product sizes are available for all loci
   if (any(is.na(result))) {
     f.loxnx <- colnames(result)[is.na(result)]
     if (length(f.loxnx) > 1) {
-      for (i in 1:length(f.loxnx)) f.loxnx2 <- paste(f.loxnx2,f.loxnx[i],sep=", ")
-      f.loxnx2 <- substr(f.loxnx2,3,nchar(f.loxnx2))
-      message(paste("\n  Product sizes pertaining to loci ",f.loxnx2,", in file ",strain.name," could not be determined.",sep=""))
+      warning(paste("Product sizes pertaining to loci ",paste(f.loxnx,collapse=", "),", in file ",strain.name," could not be determined.",sep=""))
     } else {
-      message(paste("\n  Product size pertaining to locus ",f.loxnx," in file ",strain.name," could not be determined.",sep=""))
+      warning(paste("Product size pertaining to locus ",f.loxnx," in file ",strain.name," could not be determined.",sep=""))
     }
   }
   return(result)
 } else {
-  # format a pretty diagnostic message
-  for (i in 1:length(locus.names)) f.loxnx <- paste(f.loxnx,locus.names[i],sep=", ")
-  f.loxnx <- substr(f.loxnx,3,nchar(f.loxnx))
-  message(paste("\n  Standard peaks of file ",strain.name,", containing loci ",f.loxnx,", could not be retrieved.",sep=""))
+  # format warning
+  warning(paste("Standard peaks of file ",strain.name,", containing loci ",paste(locus.names,collapse=", "),", could not be retrieved.",sep=""))
   # return result
   return(noPks)
 }
@@ -425,7 +423,7 @@ if (!size.only) {
         }
         # issue a message if conversion was not successful
         if (!conversion.found && !is.na(result[[i]][r,n])) {
-          message(paste("\n  The lazy.map provided did not allow conversion to repeat number in file ",rownames(result[[i]])[r],", locus ",n,".\n  Only rounded product size in basepairs is given.",sep=""))
+          warning(paste("The lazy.map provided did not allow conversion to repeat number in file ",rownames(result[[i]])[r],", locus ",n,". Only rounded product size in basepairs is given.",sep=""))
         }
       }
     }
@@ -448,7 +446,7 @@ if (wide.table) {
     }
     result <- result.w
   } else {
-    message("\n  Conversion to wide table was not possible since files of different strains were analyzed in the series. Sorry.")
+    warning("Conversion to wide table was not possible since files of different strains were analyzed in the series. Sorry.")
   }
 }
 # close txtProgressBar
@@ -520,4 +518,4 @@ plotabif2 <- function(abifdata,
  
  # add a nice legend
  if (add.legend) legend(x="topright",legend=dye.names,col=ch.plotcolors[channels],lty=1,bty="n")                     
-}      
+}                  
