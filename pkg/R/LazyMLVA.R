@@ -13,8 +13,18 @@ if (length(pks) < 3) stop("pks has to contain 3 peaks at least!")
 return(((pks-min(pks))/(max(pks)-min(pks)))[-c(1,length(pks))]) 
 }
 
-# Generate r_npk from r_abif (r_abif is loaded via sysdata.rda in source directory "R")
-# r_npk <- normPeaks(peakabif(r_abif,chanel=5,npeak=15,tmin=2.3,thres=0.5,fig=FALSE)$maxis)
+##         TEST VERSION      R E M O V E   F R O M   P A C K A G E   S O U R C E
+#r_abif <- read.abif("abif/1087_S1.fsa")  
+#r_npk <- normPeaks(peakabif(r_abif,chanel=5,npeak=15,tmin=2.3,thres=0.5,fig=FALSE)$maxis)
+#lazy.map <- read.csv2("lazy_map.csv")
+#r_sizes <- c(50,75,100,139,150,160,200,NA,300,NA,350,400,450,490,500)
+#save(r_abif,lazy.map,r_npk,r_sizes,file="sysdata.rda")
+##         TEST VERSION      R E M O V E   F R O M   P A C K A G E   S O U R C E
+
+#         PACKAGE VERSION   R E P L A C E   TEST VERSION   B Y   T H I S
+## Generate r_npk from r_abif (r_abif is loaded via sysdata.rda in source directory "R")
+#r_npk <- normPeaks(peakabif(r_abif,chanel=5,npeak=15,tmin=2.3,thres=0.5,fig=FALSE)$maxis)
+#         PACKAGE VERSION   R E P L A C E   TEST VERSION   B Y   T H I S
 
 #
 # Function: extractNormPeaks
@@ -293,9 +303,10 @@ if (standardFound) {
 # size.only           defaults to FALSE; if TRUE, only product sizes in basepairs are given
 # filename.sep        defaults to "_". The character string in the filename before this separator is assumed to be the strain name
 # wide.table          logical variable stating whether conversion of results to a wide table should be attempted
+# ...                 arguments passed to sizeCaller
 #
 
-vntrLoci <- function(p,lz.map=lazy.map,file.ending=".fsa",size.only=FALSE,filename.sep="_",wide.table=TRUE) {
+vntrLoci <- function(p,lz.map=lazy.map,file.ending=".fsa",size.only=FALSE,filename.sep="_",wide.table=TRUE,...) {
 # parameter lz.map is validated
 #cat(paste("\nValidating lz.map '",lz.map,"'...\n",sep=""))
 if (class(lz.map) != "data.frame") stop("lz.map needs to be a data.frame!")
@@ -393,7 +404,8 @@ for (s in series) {
                                           channels=ch,
                                           npeaks.per.channel=npks.ch,
                                           locus.names=l.names,
-                                          strain.name=sn))
+                                          strain.name=sn,
+                                          ...))
     #update txtProgressBar
     setTxtProgressBar(tpb, getTxtProgressBar(tpb) + 1/n.files)
   }
@@ -518,4 +530,4 @@ plotabif2 <- function(abifdata,
  
  # add a nice legend
  if (add.legend) legend(x="topright",legend=dye.names,col=ch.plotcolors[channels],lty=1,bty="n")                     
-}                  
+}                      

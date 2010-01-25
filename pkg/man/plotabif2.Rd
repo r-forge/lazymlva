@@ -9,10 +9,17 @@ This function draws a simple plot of the chromatogram file similar to
 \code{seqinr::plotabif}, yet additionally allows overplotting of several channels.
 }
 \usage{
-plotabif2(abifdata, channels = 1:5, ch.plotcolors = c("blue", "green", "black", "red", "orange"), 
+plotabif2(abifdata, 
+          channels = 1:5, 
+          ch.plotcolors = c("blue", "green", "black", "red", "orange"), 
           main = paste("Channels", paste(channels, collapse = ", "), "of", deparse(substitute(abifdata))),
-          ylab = "Relative Fluorescent Units (RFU)", xlab = "Time", tmin = 1, tmax = abifdata$Data[["SCAN.1"]], 
-          ylim, add.legend = TRUE, ...)
+          ylab = "Relative Fluorescent Units (RFU)", 
+          xlab = "Time", 
+          tmin = 1, 
+          tmax = abifdata$Data[["SCAN.1"]], 
+          ylim, 
+          add.legend = TRUE, 
+          ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

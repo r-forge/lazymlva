@@ -9,7 +9,13 @@ normalization with \code{normPeaks}. It just makes the creation of normalized pe
 a bit easier.
 }
 \usage{
-extractNormPeaks(abifdata, chanel = 5, npeak = 15, tmin = 2.3, thres = 0.5, fig = FALSE, ...)
+extractNormPeaks(abifdata, 
+                  chanel = 5, 
+                  npeak = 15, 
+                  tmin = 2.3, 
+                  thres = 0.5, 
+                  fig = FALSE, 
+                  ...)
 }
 \arguments{
   \item{abifdata}{
