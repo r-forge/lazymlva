@@ -31,15 +31,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 
 
 <!-- get project title  -->
-<OBJECT CLASSID="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" WIDTH="740" HEIGHT="540" CODEBASE="http://active.macromedia.com/flash5/cabs/swflash.cab#version=7,0,0,0">
-<PARAM NAME=movie VALUE="lm.swf">
-<PARAM NAME=play VALUE=true>
-<PARAM NAME=loop VALUE=false>
-<PARAM NAME=wmode VALUE=transparent>
-<PARAM NAME=quality VALUE=low>
-<EMBED SRC="test.swf" WIDTH=740 HEIGHT=540 quality=low loop=false wmode=transparent TYPE="application/x-shockwave-flash" PLUGINSPAGE="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash">
-</EMBED>
-</OBJECT>
+
 <!-- own website starts here, the following may be changed as you like -->
 
 <?php if ($handle=fopen('http://'.$domain.'/export/projtitl.php?group_name='.$group_name,'r')){
@@ -53,6 +45,16 @@ echo $contents; } ?>
 <!-- end of project description -->
 
 <p> No content added. </p>
+
+<OBJECT CLASSID="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" WIDTH="740" HEIGHT="540" CODEBASE="http://active.macromedia.com/flash5/cabs/swflash.cab#version=7,0,0,0">
+<PARAM NAME=movie VALUE="lm.swf">
+<PARAM NAME=play VALUE=true>
+<PARAM NAME=loop VALUE=false>
+<PARAM NAME=wmode VALUE=transparent>
+<PARAM NAME=quality VALUE=low>
+<EMBED SRC="test.swf" WIDTH=740 HEIGHT=540 quality=low loop=false wmode=transparent TYPE="application/x-shockwave-flash" PLUGINSPAGE="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash">
+</EMBED>
+</OBJECT>
 
 <p> The <strong>project summary page</strong> you can find <a href="http://<?php echo $domain; ?>/projects/<?php echo $group_name; ?>/"><strong>here</strong></a>. </p>
 
