@@ -52,7 +52,7 @@ echo $contents; } ?>
 <PARAM NAME=loop VALUE=false>
 <PARAM NAME=wmode VALUE=transparent>
 <PARAM NAME=quality VALUE=low>
-<EMBED SRC="test.swf" WIDTH=740 HEIGHT=540 quality=low loop=false wmode=transparent TYPE="application/x-shockwave-flash" PLUGINSPAGE="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash">
+<EMBED SRC="lm.swf" WIDTH=740 HEIGHT=540 quality=low loop=false wmode=transparent TYPE="application/x-shockwave-flash" PLUGINSPAGE="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash">
 </EMBED>
 </OBJECT>
 
